@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { ServicesService } from './services.service';
+import { Module } from "@nestjs/common";
+import { WalletService } from "./wallets.service";
 
 @Module({
-  providers: [ServicesService]
+  providers: [WalletService],
 })
 export class ServicesModule {}
