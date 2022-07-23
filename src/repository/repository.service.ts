@@ -15,34 +15,34 @@ export class RepositoryService {
   ) {}
 
   public async createUser(data) {
-    return await this.userModel.create(data);
+    return this.userModel.create(data);
   }
 
-  public async getUser(id: string) {
-    return await this.userModel.findById(id);
+  public async getUser(data) {
+    return this.userModel.findOne(data);
   }
 
   public async createWallet(data) {
-    return await this.walletModel.create(data);
+    return this.walletModel.create(data);
   }
 
   public async getWallet(id: string) {
-    return await this.walletModel.findById(id);
+    return this.walletModel.findById(id);
   }
 
   public async createPayment(data) {
-    return await this.paymentModel.create(data);
+    return this.paymentModel.create(data);
   }
 
   public async getPayment(id: string) {
-    return await this.paymentModel.findById(id);
+    return this.paymentModel.findById(id);
   }
 
   public async createLedger(data) {
-    return await this.ledgerModel.create(data);
+    return this.ledgerModel.create(data);
   }
 
   public async getLedger(id: string) {
-    return await this.ledgerModel.findById(id);
+    return this.ledgerModel.findById(id);
   }
 }
