@@ -24,5 +24,8 @@ export class PaymentDto {
   wallet_to_credit: string;
 
   @IsOptional()
-  metadata: any;
+  metadata?: any;
+
+  @IsOptional()
+  ref?: string;
 }

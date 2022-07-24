@@ -1,12 +1,13 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
 import { RepositoryModule } from "src/repository/repository.module";
 import { PaymentService } from "./payments.service";
 import { UserService } from "./users.service";
 import { WalletService } from "./wallets.service";
 
 @Module({
-  imports: [ConfigModule, RepositoryModule],
+  imports: [ConfigModule, RepositoryModule, JwtModule],
   providers: [WalletService, UserService, PaymentService],
   exports: [WalletService, UserService, PaymentService],
 })

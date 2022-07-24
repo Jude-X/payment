@@ -1,21 +1,36 @@
-import { IsDefined, IsString } from "class-validator";
+import {
+  IsDefined,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from "class-validator";
 
 export class UserDto {
-  @IsString()
+  @IsEmail()
   @IsDefined()
+  @IsNotEmpty()
   email: string;
 
   @IsString()
   @IsDefined()
+  @IsNotEmpty()
   firstName: string;
 
   @IsString()
   @IsDefined()
+  @IsNotEmpty()
   lastName: string;
 
   @IsString()
   @IsDefined()
+  @IsNotEmpty()
   password: string;
 
+  @IsOptional()
+  metadata?: any;
+
   wallet?: string;
+
+  salt?: string;
 }

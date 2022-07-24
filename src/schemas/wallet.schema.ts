@@ -4,7 +4,8 @@ import { User } from "./user.schema";
 
 export type WalletDocument = Wallet & Document;
 
-@Schema()
+//Giving another name
+@Schema({ collection: "judex_wallet" })
 export class Wallet {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -14,7 +15,7 @@ export class Wallet {
 
   @Prop({
     type: Number,
-    required: true,
+    default: 0,
   })
   amount: number;
 
@@ -30,6 +31,18 @@ export class Wallet {
     required: true,
   })
   dailyLimit: number;
+
+  @Prop({
+    type: Number,
+    required: true,
+  })
+  currentLimit: number;
+
+  @Prop({
+    type: Number,
+    required: true,
+  })
+  lastUpdated: number;
 }
 
 export const WalletSchema = SchemaFactory.createForClass(Wallet);

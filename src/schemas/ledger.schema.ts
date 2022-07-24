@@ -1,28 +1,40 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document } from "mongoose";
-import { Payment } from "./payment.schema";
 
 export type LedgerDocument = Ledger & Document;
 
-@Schema()
+//Giving another name
+@Schema({ collection: "judex_ledger" })
 export class Ledger {
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Payment",
+    type: String,
+    required: true,
   })
-  payment: Payment;
+  ref: string;
+
+  @Prop({
+    type: String,
+    enum: ["funding", "payment", "refund"],
+    required: true,
+  })
+  type: string;
 
   @Prop({
     type: Number,
     required: true,
   })
-  oldBalance: string;
+  oldBalance: number;
 
   @Prop({
     type: Number,
-    require: true,
+    required: true,
   })
-  newBalance: string;
+  newBalance: number;
+
+  @Prop({
+    type: Number,
+    required: true,
+  })
+  amount: number;
 }
 
 export const LedgerSchema = SchemaFactory.createForClass(Ledger);

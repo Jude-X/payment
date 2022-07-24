@@ -7,6 +7,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { AuthModule } from "./auth/auth.module";
 import config from "./config";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import config from "./config";
           isGlobal: true,
           load: [config],
         }),
+        ScheduleModule.forRoot(),
       ],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>("MONGODB_URI"),

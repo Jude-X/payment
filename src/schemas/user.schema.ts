@@ -1,28 +1,41 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { v4 as uuidv4 } from "uuid";
 
 export type UserDocument = User & Document;
 
-@Schema()
+//Giving another name
+@Schema({ collection: "judex_user" })
 export class User {
-  @Prop()
+  @Prop({
+    type: String,
+    required: true,
+  })
   email: string;
 
-  @Prop()
+  @Prop({
+    type: String,
+    required: true,
+  })
   firstName: string;
 
-  @Prop()
+  @Prop({
+    type: String,
+    required: true,
+  })
   lastName: string;
 
-  @Prop()
+  @Prop({
+    type: String,
+    required: true,
+  })
   password: string;
 
   @Prop()
   wallet: string;
 
   @Prop({
-    default: uuidv4(),
+    type: String,
+    required: true,
   })
   salt: string;
 }

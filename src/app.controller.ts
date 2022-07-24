@@ -4,7 +4,8 @@ import { PaymentService } from "./services/payments.service";
 import { UserService } from "./services/users.service";
 import { WalletService } from "./services/wallets.service";
 import * as DTOs from "./dtos";
-import { AuthService } from "./auth/auth.service";
+import { WalletFundDto } from "./dtos";
+import { LoginDto } from "./dtos/login.dto";
 
 @Controller()
 export class AppController {
@@ -12,8 +13,7 @@ export class AppController {
     private readonly appService: AppService,
     private readonly userService: UserService,
     private readonly walletService: WalletService,
-    private readonly paymentService: PaymentService,
-    private readonly authService: AuthService
+    private readonly paymentService: PaymentService
   ) {}
 
   @Get()
@@ -31,6 +31,11 @@ export class AppController {
     return this.userService.get(id);
   }
 
+  @Get("/users")
+  getUsers() {
+    return this.userService.get();
+  }
+
   @Post("/wallets")
   createWallets(@Body() data: DTOs.WalletDto) {
     return this.walletService.create(data);
@@ -41,13 +46,18 @@ export class AppController {
     return this.walletService.get(id);
   }
 
+  @Get("/wallets")
+  getWallets() {
+    return this.walletService.get();
+  }
+
   @Post("wallets/fund")
-  fundWallet(@Body() data) {
+  fundWallet(@Body() data: WalletFundDto) {
     return this.walletService.fund(data);
   }
 
   @Post("payment/initiate")
-  initiatePayment(@Body() data: DTOs.PaymentDto) {
+  initiatePayment(@Body() data: DTOs.PaymentDto[]) {
     return this.paymentService.initiate(data);
   }
 
@@ -62,7 +72,7 @@ export class AppController {
   }
 
   @Post("/login")
-  login(@Body("data") data) {
-    return this.authService.login(data);
+  login(@Body() data: LoginDto) {
+    return this.userService.login(data);
   }
 }

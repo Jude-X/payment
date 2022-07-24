@@ -1,13 +1,14 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
+import { Payment } from "./payment.schema";
 import { User } from "./user.schema";
 import { Wallet } from "./wallet.schema";
 
-export type PaymentDocument = Payment & Document;
+export type RefundDocument = Refund & Document;
 
 //Giving another name
-@Schema({ collection: "judex_payment" })
-export class Payment {
+@Schema({ collection: "judex_refund" })
+export class Refund {
   @Prop({
     type: Number,
     required: true,
@@ -55,6 +56,13 @@ export class Payment {
   status: string;
 
   @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Payment",
+    required: Payment,
+  })
+  payment: string;
+
+  @Prop({
     type: String,
     required: true,
   })
@@ -71,4 +79,4 @@ export class Payment {
   error_message: string;
 }
 
-export const PaymentSchema = SchemaFactory.createForClass(Payment);
+export const RefundSchema = SchemaFactory.createForClass(Refund);
