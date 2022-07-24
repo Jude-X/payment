@@ -28,12 +28,4 @@ export class PaymentService {
       data,
     };
   }
-
-  public async get(data) {
-    return {
-      status: "success",
-      message: "User successfully fetched",
-      data,
-    };
-  }
 }

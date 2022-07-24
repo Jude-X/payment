@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 export type UserDocument = User & Document;
 
@@ -19,6 +20,11 @@ export class User {
 
   @Prop()
   wallet: string;
+
+  @Prop({
+    default: uuidv4(),
+  })
+  salt: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

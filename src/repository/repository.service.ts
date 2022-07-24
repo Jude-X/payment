@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { LedgerDocument } from "src/schemas/ledger.schema";
 import { PaymentDocument } from "src/schemas/payment.schema";
@@ -8,10 +9,11 @@ import { WalletDocument } from "src/schemas/wallet.schema";
 @Injectable()
 export class RepositoryService {
   constructor(
-    private userModel: Model<UserDocument>,
-    private walletModel: Model<WalletDocument>,
-    private paymentModel: Model<PaymentDocument>,
-    private ledgerModel: Model<LedgerDocument>
+    @InjectModel("User") private readonly userModel: Model<UserDocument>,
+    @InjectModel("Wallet") private readonly walletModel: Model<WalletDocument>,
+    @InjectModel("Payment")
+    private readonly paymentModel: Model<PaymentDocument>,
+    @InjectModel("Ledger") private readonly ledgerModel: Model<LedgerDocument>
   ) {}
 
   public async createUser(data) {

@@ -5,8 +5,4 @@ export class AppService {
   healthCheck() {
     return { status: "UP" };
   }
-
-  login(data) {
-    return;
-  }
 }

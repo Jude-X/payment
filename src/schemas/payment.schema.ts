@@ -14,8 +14,8 @@ export class Payment {
 
   @Prop({
     type: String,
-    enum: ["successful", "failed", "pending"],
-    default: "pending",
+    enum: ["successful", "failed", "initiated"],
+    default: "initiated",
   })
   status: string;
 
