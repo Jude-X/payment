@@ -1,17 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { UserDto } from "src/dtos";
+import { UserDto } from "../dtos";
 import { RepositoryService } from "../repository/repository.service";
 import * as bcrypt from "bcrypt";
 import { ConfigService } from "@nestjs/config";
-import { LoginDto } from "src/dtos/login.dto";
-import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class UserService {
   constructor(
     private repository: RepositoryService,
-    private configService: ConfigService,
-    private jwtService: JwtService
+    private configService: ConfigService
   ) {}
 
   public async create(data: UserDto) {
@@ -70,32 +67,6 @@ export class UserService {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-      },
-    };
-  }
-
-  async login(data: LoginDto) {
-    const exception = new HttpException(
-      {
-        status: "failed",
-        message: "Invalid email or password",
-      },
-      HttpStatus.UNAUTHORIZED
-    );
-    const user = await this.repository.getUser({ email: data.email });
-    if (!user) {
-      throw exception;
-    }
-    const hash = bcrypt.hashSync(data.password, user.salt);
-    if (hash !== user.password) {
-      throw exception;
-    }
-    const payload = { userId: user.id };
-    return {
-      status: "success",
-      message: "You're Logged In",
-      data: {
-        access_token: this.jwtService.sign(payload),
       },
     };
   }

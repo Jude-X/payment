@@ -1,17 +1,17 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { RepositoryService } from "../repository/repository.service";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { PaymentDto, RefundDto } from "src/dtos";
+import { PaymentDto, RefundDto } from "../dtos";
 
 @Injectable()
 export class PaymentService {
   private readonly logger = new Logger(PaymentService.name);
   constructor(private repository: RepositoryService) {}
 
-  public async initiate(data: PaymentDto[]) {
+  public async initiate(data: PaymentDto[], userId) {
     const request = await this.repository.bulkCreate({
       created_at: new Date().toISOString(),
-      //owner: data.userId,
+      owner: userId,
       type: "payment",
       data,
     });
@@ -25,11 +25,12 @@ export class PaymentService {
     };
   }
 
-  public async refund(data) {
+  public async refund(data, userId) {
     const request = await this.repository.bulkCreate({
       created_at: new Date().toISOString(),
       type: "refunds",
-      owner: data.userId,
+      data,
+      owner: userId,
     });
 
     return {
@@ -62,8 +63,8 @@ export class PaymentService {
     };
   }
 
-  public async requestVerify(request_id: string) {
-    const request = await this.repository.getBulk({ _id: request_id });
+  public async verifyRequest(id: string) {
+    const request = await this.repository.getBulk({ _id: id });
     if (!request) {
       throw new HttpException(
         { message: "Request Not Found" },

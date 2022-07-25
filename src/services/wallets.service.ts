@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { WalletDto, WalletFundDto } from "src/dtos";
+import { WalletDto, WalletFundDto } from "../dtos";
 import { RepositoryService } from "../repository/repository.service";
 
 @Injectable()
@@ -36,6 +36,7 @@ export class WalletService {
         })
     );
     await Promise.all(asyncDBOperations);
+    data.currentLimit = data.dailyLimit;
     data.lastUpdated = new Date().getTime();
     const wallet = await this.repository.createWallet(data);
     return {
@@ -85,7 +86,7 @@ export class WalletService {
     };
   }
 
-  public async fund(data: WalletFundDto) {
+  public async fund(data: WalletFundDto, userId) {
     //Check if the wallet exists
     const wallet = await this.repository.getWallet({ _id: data.wallet });
     if (!wallet) {
@@ -109,7 +110,7 @@ export class WalletService {
       created_at: new Date().toISOString(),
       credit_wallet: wallet._id,
       debit_wallet: "SYSTEM",
-      owner: wallet.owner,
+      owner: userId,
       currency: wallet.currency,
     });
 

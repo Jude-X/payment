@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { LedgerDocument } from "src/schemas/ledger.schema";
-import { PaymentDocument } from "src/schemas/payment.schema";
-import { BulkDocument } from "src/schemas/bulk.schema";
-import { UserDocument } from "src/schemas/user.schema";
-import { WalletDocument } from "src/schemas/wallet.schema";
-import { RefundDocument } from "src/schemas/refund.schema";
+import { LedgerDocument } from "../schemas/ledger.schema";
+import { PaymentDocument } from "../schemas/payment.schema";
+import { BulkDocument } from "../schemas/bulk.schema";
+import { UserDocument } from "../schemas/user.schema";
+import { WalletDocument } from "../schemas/wallet.schema";
+import { RefundDocument } from "../schemas/refund.schema";
 
 @Injectable()
 export class RepositoryService {
