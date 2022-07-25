@@ -93,4 +93,8 @@ export class RepositoryService {
   public async createRefund(data) {
     return this.refundModel.create(data);
   }
+
+  public async getRefund(data: { _id?: string }) {
+    return this.refundModel.findById(data);
+  }
 }

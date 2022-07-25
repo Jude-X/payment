@@ -28,7 +28,7 @@ export class Refund {
   credit_wallet: Wallet;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: "string",
     ref: "Wallet",
     required: true,
   })

@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { RepositoryService } from "../repository/repository.service";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { PaymentDto, RefundDto } from "../dtos";
+import { PaymentVerifyDto } from "../dtos/payment-verify.dto";
 
 @Injectable()
 export class PaymentService {
@@ -25,10 +26,10 @@ export class PaymentService {
     };
   }
 
-  public async refund(data, userId) {
+  public async refund(data: RefundDto[], userId) {
     const request = await this.repository.bulkCreate({
       created_at: new Date().toISOString(),
-      type: "refunds",
+      type: "refund",
       data,
       owner: userId,
     });
@@ -42,24 +43,28 @@ export class PaymentService {
     };
   }
 
-  public async verify(data) {
-    let _id = data.payment;
+  public async verify(data: PaymentVerifyDto) {
+    let response;
+    let errormessage: string;
+    let message: string;
     if (data.refund) {
-      _id = data.refund;
+      response = await this.repository.getRefund({ _id: data.refund });
+      errormessage = "Refund Not Found";
+      message = "Refund(s) verified successfully";
+    } else if (data.payment) {
+      response = await this.repository.getPayment({ _id: data.payment });
+      errormessage = "Payment Not Found";
+      message = "Payment(s) verified successfully";
+    } else {
+      response = (await this.get(data.id)).data;
     }
-    const payment = await this.repository.getPayment({ _id });
-    if (!payment) {
-      throw new HttpException(
-        { message: "Payment Not Found" },
-        HttpStatus.NOT_FOUND
-      );
+    if (!response) {
+      throw new HttpException({ message: errormessage }, HttpStatus.NOT_FOUND);
     }
     return {
       status: "success",
-      message: "Payment successully fetched",
-      data: {
-        payment,
-      },
+      message,
+      data: response,
     };
   }
 
@@ -81,7 +86,7 @@ export class PaymentService {
   }
 
   public async get(id?: string) {
-    if (!id) {
+    if (!id || id == ":id") {
       //Fetch All Payments
       const payments = await this.repository.getPayments();
       return {
@@ -132,13 +137,13 @@ export class PaymentService {
     };
   }
 
-  // Run a cron job to process bulk payment every 60 seconds
-  //@Cron(CronExpression.EVERY_MINUTE)
+  //Run a cron job to process bulk payment every 60 seconds
+  @Cron(CronExpression.EVERY_MINUTE)
   public async handlePayment() {
     let payment;
     const bulk = await this.repository.getNextBulkPayment();
     if (!bulk) {
-      this.logger.warn(`No Payment Request ID initiated`);
+      this.logger.debug(`No Payment Request ID initiated`);
       return;
     }
     this.logger.debug(`Handling Payment Request ID - ${bulk._id}`);
@@ -165,7 +170,7 @@ export class PaymentService {
           .then((wallet) => {
             if (!wallet) {
               paymentPayload["error_message"] = "Debtor Wallet Not Found";
-              this.logger.warn(paymentPayload["error_message"]);
+              this.logger.debug(paymentPayload["error_message"]);
             }
             return wallet;
           }),
@@ -176,43 +181,53 @@ export class PaymentService {
           .then((wallet) => {
             if (!wallet) {
               paymentPayload["error_message"] = "Creditor Wallet Not Found";
-              this.logger.warn(paymentPayload["error_message"]);
+              this.logger.debug(paymentPayload["error_message"]);
             }
             return wallet;
           }),
       ]);
 
       if (!paymentPayload["error_message"]) {
-        //check dailylimit of debtor using lastUpdated and currentLimit
+        //check same currency
         if (
-          new Date().getTime() - wallets[0].lastUpdated >
-          24 * 60 * 60 * 1000
+          wallets[0].currency === wallets[1].currency &&
+          wallets[1].currency === paymentDto.currency
         ) {
-          // Reset his limit as it has been more than 24 hours
-          wallets[0].lastUpdated = new Date().getTime();
-          wallets[0].currentLimit = wallets[0].dailyLimit;
-        } else {
-          if (wallets[0].currentLimit - paymentDto.amount < 0) {
-            // Check if his currentLimit allows him make the paymentPayload
-            paymentPayload["error_message"] = "Debtor has reached limit";
-            this.logger.warn(paymentPayload["error_message"]);
-          } else if (wallets[0].amount - paymentDto.amount < 0) {
-            //Check if the debtor has enough money
-            paymentPayload["error_message"] = "Debtor has insufficient balance";
-            this.logger.warn(paymentPayload["error_message"]);
+          //check dailylimit of debtor using lastUpdated and currentLimit
+          if (
+            new Date().getTime() - wallets[0].lastUpdated >
+            24 * 60 * 60 * 1000
+          ) {
+            // Reset his limit as it has been more than 24 hours
+            wallets[0].lastUpdated = new Date().getTime();
+            wallets[0].currentLimit = wallets[0].dailyLimit;
           } else {
-            //Reduce Current Limit
-            wallets[0].currentLimit -= paymentDto.amount;
-            //Make the payment
-            //Reduce the amount of the debtor
-            wallets[0].amount -= paymentDto.amount;
-            //Increase the amount of the creditor
-            wallets[1].amount += paymentDto.amount;
+            if (wallets[0].currentLimit - paymentDto.amount < 0) {
+              // Check if his currentLimit allows him make the paymentPayload
+              paymentPayload["error_message"] = "Debtor has reached limit";
+              this.logger.debug(paymentPayload["error_message"]);
+            } else if (wallets[0].amount - paymentDto.amount < 0) {
+              //Check if the debtor has enough money
+              paymentPayload["error_message"] =
+                "Debtor has insufficient balance";
+              this.logger.debug(paymentPayload["error_message"]);
+            } else {
+              //Reduce Current Limit
+              wallets[0].currentLimit -= paymentDto.amount;
+              //Make the payment
+              //Reduce the amount of the debtor
+              wallets[0].amount -= paymentDto.amount;
+              //Increase the amount of the creditor
+              wallets[1].amount += paymentDto.amount;
 
-            //Asynchronously save both wallets
-            await Promise.all([wallets[0].save(), wallets[1].save()]);
-            paymentPayload["status"] = "successful";
+              //Asynchronously save both wallets
+              await Promise.all([wallets[0].save(), wallets[1].save()]);
+              paymentPayload["status"] = "successful";
+            }
           }
+        } else {
+          paymentPayload["error_message"] = "Wallet Currency Discrepancy";
+          this.logger.debug(paymentPayload["error_message"]);
         }
       }
 
@@ -241,10 +256,14 @@ export class PaymentService {
           }),
         ]);
       }
+
       this.logger.debug(
         `Successfully Handled Payment Request ID - ${bulk._id}`
       );
     }
+
+    bulk.status = "completed";
+    await bulk.save();
   }
 
   // Run a cron job to process bulk refund every 5 minutes
@@ -253,7 +272,7 @@ export class PaymentService {
     let wallets;
     const bulk = await this.repository.getNextBulkRefund();
     if (!bulk) {
-      this.logger.warn(`No Refund Request ID initiated`);
+      this.logger.debug(`No Refund Request ID initiated`);
       return;
     }
     this.logger.debug(`Handling Refund Request ID - ${bulk._id}`);
@@ -272,9 +291,16 @@ export class PaymentService {
       if (!payment) {
         // No payment exists
         refundPayload["error_message"] = "Payment ID Not Found";
+      } else if (payment.status != "successful") {
+        // Payment wasnt successful
+        refundPayload["error_message"] = "Payment Was Not Successful";
+      } else if (payment.ref == "WALLET FUNDING") {
+        // Cant refund wallet funding
+        refundPayload["error_message"] = "Cant Refund Wallet Funding";
       } else {
         refundPayload["debit_wallet"] = payment.credit_wallet;
         refundPayload["credit_wallet"] = payment.debit_wallet;
+        refundPayload["currency"] = payment.currency;
         //Asynchronously fetch wallets
         wallets = await Promise.all([
           this.repository
@@ -284,7 +310,7 @@ export class PaymentService {
             .then((wallet) => {
               if (!wallet) {
                 refundPayload["error_message"] = "Debtor Wallet Not Found";
-                this.logger.warn(refundPayload["error_message"]);
+                this.logger.debug(refundPayload["error_message"]);
               }
               return wallet;
             }),
@@ -295,7 +321,7 @@ export class PaymentService {
             .then((wallet) => {
               if (!wallet) {
                 refundPayload["error_message"] = "Creditor Wallet Not Found";
-                this.logger.warn(refundPayload["error_message"]);
+                this.logger.debug(refundPayload["error_message"]);
               }
               return wallet;
             }),
@@ -334,5 +360,8 @@ export class PaymentService {
         );
       }
     }
+
+    bulk.status = "completed";
+    await bulk.save();
   }
 }

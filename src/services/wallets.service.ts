@@ -107,9 +107,10 @@ export class WalletService {
     //Create Funding Entry
     const funding = await this.repository.createPaymentSingle({
       amount: data.amount,
+      ref: "WALLET FUNDING",
       created_at: new Date().toISOString(),
       credit_wallet: wallet._id,
-      debit_wallet: "SYSTEM",
+      status: "successful",
       owner: userId,
       currency: wallet.currency,
     });

@@ -29,7 +29,7 @@ export class Payment {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Wallet",
-    required: true,
+    required: false,
   })
   debit_wallet: Wallet;
 

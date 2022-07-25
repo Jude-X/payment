@@ -20,7 +20,10 @@ export class UserService {
         HttpStatus.BAD_REQUEST
       );
     }
-    const salt = bcrypt.genSaltSync(this.configService.get("SALT_ROUNDS"));
+
+    const salt = bcrypt.genSaltSync(
+      parseInt(this.configService.get("SALT_ROUNDS"))
+    );
     const hash = bcrypt.hashSync(data.password, salt);
     data.password = hash;
     data.salt = salt;

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { RepositoryService } from "../repository/repository.service";
 import { LoginDto } from "../dtos/login.dto";
 import * as bcrypt from "bcrypt";
@@ -13,7 +13,13 @@ export class AuthService {
     private configService: ConfigService
   ) {}
 
-  async validateUser(data: LoginDto) {
+  async validateToken(payload) {
+    const { _id, email } = payload as { _id: string; email: string };
+    const user = await this.repository.getUser({ _id, email });
+    return user;
+  }
+
+  async validateUser(email: string, password: string) {
     const exception = new HttpException(
       {
         status: "failed",
@@ -21,26 +27,30 @@ export class AuthService {
       },
       HttpStatus.UNAUTHORIZED
     );
-    const user = await this.repository.getUser({ email: data.email });
+    const user = await this.repository.getUser({ email });
     if (!user) {
       throw exception;
     }
-    const hash = bcrypt.hashSync(data.password, user.salt);
+    const hash = bcrypt.hashSync(password, user.salt);
     if (hash !== user.password) {
-      return null;
+      throw exception;
     }
     return user;
   }
 
-  async login(user: any) {
-    const payload = { userId: user._id, email: user.email };
+  async login(data: LoginDto) {
+    const { email, password } = data;
+    const user = await this.validateUser(email, password);
     return {
       status: "success",
       message: "You're Logged In",
       data: {
-        access_token: this.jwtService.sign(payload, {
-          secret: this.configService.get<string>("JWT_SECRET"),
-        }),
+        access_token: this.jwtService.sign(
+          { _id: user._id, email: user.email },
+          {
+            secret: this.configService.get<string>("JWT_SECRET"),
+          }
+        ),
       },
     };
   }
