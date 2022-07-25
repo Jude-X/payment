@@ -1,0 +1,890 @@
+{
+	"info": {
+		"_postman_id": "3ce64700-873b-4d8c-946a-7d7c297e27a3",
+		"name": "Okra-Take-Home",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19067722"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User - Creditor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var userId = pm.response.json().userId\r",
+							"if(userId){\r",
+							"    pm.globals.set(\"creditorUserId\", userId)\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"nzube.onyekaba@yahoo.com\",\r\n    \"firstName\": \"Dev\",\r\n    \"lastName\": \"Kaba\",\r\n    \"password\": \"Creditor\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/users",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User - Debtor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var userId = pm.response.json().userId\r",
+							"if(userId){\r",
+							"    pm.globals.set(\"debtorUserId\", userId)\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"nzube.onyekaba@okra.com\",\r\n    \"firstName\": \"Jude\",\r\n    \"lastName\": \"Onyekaba\",\r\n    \"password\": \"Debtor\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/users",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User - Creditor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/users/:id",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{creditorUserId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User - Debtor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/users/:id",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{debtorUserId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/users",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Wallet - Creditor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var walletId = pm.response.json().walletId\r",
+							"if(walletId) {\r",
+							"    pm.globals.set(\"creditorWalletId\", walletId)\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner\": \"{{creditorUserId}}\",\r\n    \"currency\": \"USD\",\r\n    \"dailyLimit\": 1000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/wallets",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"wallets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Wallet - Debtor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var walletId = pm.response.json().walletId\r",
+							"if(walletId) {\r",
+							"    pm.globals.set(\"debtorWalletId\", walletId)\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner\": \"{{debtorUserId}}\",\r\n    \"currency\": \"USD\",\r\n    \"dailyLimit\": 1500\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/wallets",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"wallets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Wallet - Creditor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/wallets/:id",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"wallets",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{creditorWalletId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Wallet - Debtor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/wallets/:id",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"wallets",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{debtorWalletId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Wallets",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/wallets",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"wallets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var token = pm.response.json().data.access_token\r",
+							"if(token) {\r",
+							"    pm.globals.set(\"token\", \"Bearer \" + token)\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"nzube.onyekaba@okra.com\",\r\n    \"password\": \"Debtor\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fund Wallet - Debtor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var paymentId = pm.response.json().paymentId\r",
+							"if(paymentId) {\r",
+							"    pm.globals.set(\"paymentId\", paymentId)\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"wallet\": \"{{debtorWalletId}}\",\r\n    \"amount\": 5000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/wallets/fund",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"wallets",
+						"fund"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Initiate Payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var requestId = pm.response.json().data.request_id\r",
+							"if(requestId) {\r",
+							"    pm.globals.set(\"paymentRequestId\", requestId)\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\r\n    \"amount\": 300,\r\n\t\"currency\": \"USD\",\r\n    \"wallet_to_debit\": \"{{debtorWalletId}}\",\r\n    \"wallet_to_credit\": \"{{creditorWalletId}}\",\r\n    \"metadata\": { }\r\n}, {\r\n    \"amount\": 250,\r\n\t\"currency\": \"USD\",\r\n    \"wallet_to_debit\": \"{{debtorWalletId}}\",\r\n    \"wallet_to_credit\": \"{{creditorWalletId}}\",\r\n    \"metadata\": { }\r\n}, {\r\n    \"amount\": 200,\r\n\t\"currency\": \"USD\",\r\n    \"wallet_to_debit\": \"{{debtorWalletId}}\",\r\n    \"wallet_to_credit\": \"{{creditorWalletId}}\",\r\n    \"metadata\": { }\r\n}, {\r\n    \"amount\": 500,\r\n\t\"currency\": \"USD\",\r\n    \"wallet_to_debit\": \"{{debtorWalletId}}\",\r\n    \"wallet_to_credit\": \"{{creditorWalletId}}\",\r\n    \"metadata\": { }\r\n}, {\r\n    \"amount\": 400,\r\n\t\"currency\": \"USD\",\r\n    \"wallet_to_debit\": \"{{debtorWalletId}}\",\r\n    \"wallet_to_credit\": \"{{creditorWalletId}}\",\r\n    \"metadata\": { }\r\n}, {\r\n    \"amount\": 200,\r\n\t\"currency\": \"USD\",\r\n    \"wallet_to_debit\": \"{{debtorWalletId}}\",\r\n    \"wallet_to_credit\": \"{{creditorWalletId}}\",\r\n    \"metadata\": { }\r\n}]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/payment/initiate",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"payment",
+						"initiate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Payment Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/requests/verify/:id",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"requests",
+						"verify",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{paymentRequestId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Payments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var payments = pm.response.json().data\r",
+							"if(payments) {\r",
+							"    for(let i=0; i < payments.length; i++){\r",
+							"        let key = \"payments\" + i\r",
+							"        pm.globals.set(key, payments[i].id)\r",
+							"   }\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"payment\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/payments/verify/:id",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"payments",
+						"verify",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Initiate Refund",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var requestId = pm.response.json().data.request_id\r",
+							"if(requestId) {\r",
+							"    pm.globals.set(\"refundRequestId\", requestId)\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\r\n    \"amount\": 300,\r\n    \"payment\": \"{{payments1}}\"\r\n}, {\r\n    \"amount\": 250,\r\n    \"payment\": \"{{payments1}}\"\r\n}, {\r\n    \"amount\": 200,\r\n    \"payment\": \"{{payments1}}\"\r\n}, {\r\n    \"amount\": 500,\r\n    \"payment\": \"{{payments1}}\"\r\n}]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/payment/refund",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"payment",
+						"refund"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Refund Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/requests/verify/:id",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"requests",
+						"verify",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{refundRequestId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Refund",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/payments/verify/:id",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"payments",
+						"verify",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "localhost:5000",
+			"type": "string"
+		}
+	]
+}
