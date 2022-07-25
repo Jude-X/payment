@@ -1,7 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
-import { User } from "./user.schema";
-import { Wallet } from "./wallet.schema";
 
 export type PaymentDocument = Payment & Document;
 

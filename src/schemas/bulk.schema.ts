@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
 import { PaymentDto, RefundDto } from "../dtos";
-import { User } from "./user.schema";
 
 export type BulkDocument = Bulk & Document;
 
