@@ -883,7 +883,7 @@
 	"variable": [
 		{
 			"key": "URL",
-			"value": "localhost:5000",
+			"value": "https://okra-payment.herokuapp.com",
 			"type": "string"
 		}
 	]
