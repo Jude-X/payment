@@ -79,7 +79,10 @@ export class RepositoryService {
   }
 
   public async getPayments() {
-    return this.paymentModel.find().exec();
+    return [
+      ...(await this.paymentModel.find().exec()),
+      ...(await this.refundModel.find().exec()),
+    ];
   }
 
   public async createLedger(data) {

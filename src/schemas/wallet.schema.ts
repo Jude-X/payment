@@ -11,7 +11,7 @@ export class Wallet {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   })
-  owner: User;
+  owner: string;
 
   @Prop({
     type: Number,

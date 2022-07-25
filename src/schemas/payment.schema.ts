@@ -24,21 +24,21 @@ export class Payment {
     ref: "Wallet",
     required: true,
   })
-  credit_wallet: Wallet;
+  credit_wallet: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Wallet",
     required: false,
   })
-  debit_wallet: Wallet;
+  debit_wallet: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   })
-  owner: User;
+  owner: string;
 
   @Prop({
     type: String,

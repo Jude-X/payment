@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document } from "mongoose";
-import { Payment } from "./payment.schema";
 import { User } from "./user.schema";
 import { Wallet } from "./wallet.schema";
 
@@ -25,21 +24,21 @@ export class Refund {
     ref: "Wallet",
     required: true,
   })
-  credit_wallet: Wallet;
+  credit_wallet: string;
 
   @Prop({
     type: "string",
     ref: "Wallet",
     required: true,
   })
-  debit_wallet: Wallet;
+  debit_wallet: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   })
-  owner: User;
+  owner: string;
 
   @Prop({
     type: String,
@@ -58,7 +57,7 @@ export class Refund {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Payment",
-    required: Payment,
+    required: false,
   })
   payment: string;
 

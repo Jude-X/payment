@@ -137,8 +137,8 @@ export class PaymentService {
     };
   }
 
-  //Run a cron job to process bulk payment every 60 seconds
-  @Cron(CronExpression.EVERY_MINUTE)
+  //Run a cron job to process bulk payment every 30 seconds
+  @Cron(CronExpression.EVERY_30_SECONDS)
   public async handlePayment() {
     let payment;
     const bulk = await this.repository.getNextBulkPayment();
@@ -255,19 +255,17 @@ export class PaymentService {
             amount: paymentDto.amount,
           }),
         ]);
+        this.logger.debug(`Successfully Handled Payment ID - ${payment._id}`);
       }
-
-      this.logger.debug(
-        `Successfully Handled Payment Request ID - ${bulk._id}`
-      );
     }
 
+    this.logger.debug(`Successfully Handled Payment Request ID - ${bulk._id}`);
     bulk.status = "completed";
     await bulk.save();
   }
 
-  // Run a cron job to process bulk refund every 5 minutes
-  @Cron(CronExpression.EVERY_5_MINUTES)
+  // Run a cron job to process bulk refund every minute
+  @Cron(CronExpression.EVERY_MINUTE)
   public async handleRefund() {
     let wallets;
     const bulk = await this.repository.getNextBulkRefund();
@@ -316,7 +314,7 @@ export class PaymentService {
             }),
           this.repository
             .getWallet({
-              _id: refundPayload["creditor_wallet"],
+              _id: refundPayload["credit_wallet"],
             })
             .then((wallet) => {
               if (!wallet) {
@@ -334,6 +332,7 @@ export class PaymentService {
           //Asynchronously save both wallets
           await Promise.all([wallets[0].save(), wallets[1].save()]);
           refundPayload["status"] = "successful";
+          refundPayload["payment"] = payment._id;
         }
       }
       const refund = await this.repository.createRefund(refundPayload);
@@ -355,13 +354,12 @@ export class PaymentService {
             amount: refundDto.amount,
           }),
         ]);
-        this.logger.debug(
-          `Successfully Handled Refund Request ID - ${bulk._id}`
-        );
+        this.logger.debug(`Successfully Handled Refund ID - ${refund._id}`);
       }
     }
 
     bulk.status = "completed";
     await bulk.save();
+    this.logger.debug(`Successfully Handled Refund Request ID - ${bulk._id}`);
   }
 }

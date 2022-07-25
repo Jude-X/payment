@@ -18,7 +18,7 @@ export class Bulk {
     ref: "User",
     required: true,
   })
-  owner: User;
+  owner: string;
 
   @Prop({
     type: String,
